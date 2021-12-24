@@ -3,22 +3,32 @@ function preload(){
 }
 
 function setup(){
-canvas = createCanvas(600,600);
-canvas.position(110,250);
-vid = createCapture(VIDEO);
-vid.hide();
-tint_c;
+    canvas = createCanvas(300, 300);
+    canvas.center();
+    video = createCapture(VIDEO);
+    video.hide();
+    video.size(300, 300);
+
+    poseNet = ml5.poseNet(video, modelLoaded);
+    poseNet.on('pose', gotPoses);
+}
+
+function modelLoaded(){
+    console.log("done");
+}
+
+function gotPoses(results){
+    if(results.length > 0){
+        noseX = results[0].pose.nose.x;
+        noseY = results[0].pose.nose.y;
+        console.log("x = " + noseX + ", y = " + noseY);
+    }
 }
 
 function draw(){
-image(vid, 0, 0, 600, 600);
-tint(tint_c);
+    image(video, 0, 0, 300, 300);
 }
 
 function take_snapshot(){
-save('cam.py.png');
-}
-
-function filter_tint(){
-tint_c = document.getElementById("color_name").value;
+    save('beluga.png');
 }
